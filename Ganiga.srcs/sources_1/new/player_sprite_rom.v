@@ -9,7 +9,7 @@ module player_sprite_rom (
     reg [31:0] rom [0:255];
 
     initial begin
-        $readmemh("player_1.txt", rom);
+        $readmemh("player_1.mem", rom);
     end
 
     always @(posedge clk) begin
