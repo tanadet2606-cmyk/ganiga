@@ -20,7 +20,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module game_engine(
+module game_engine #(
+    parameter ENEMY_MOVE_DELAY = 30,
+    parameter ENEMY_STEP_X     = 1,
+    parameter ENEMY_STEP_Y     = 10
+) (
+
     input wire clk,
     input wire rst_ni,
     input wire tick,
@@ -69,7 +74,11 @@ module game_engine(
     );
 
     // Enemy Control
-    enemy_control e_ctrl (
+    enemy_control #(
+        .MOVE_DELAY(ENEMY_MOVE_DELAY),
+        .STEP_X(ENEMY_STEP_X),
+        .STEP_Y(ENEMY_STEP_Y)
+    ) e_ctrl (
         .clk(clk), .rst_ni(rst_game_ni), .tick(tick),
         .bullet_active(b_act_raw),
         .bullet_x(b_x_raw),
@@ -83,6 +92,7 @@ module game_engine(
     // Bullet
     bullet bullet_inst (
         .clk(clk), .rst_ni(rst_game_ni), .fire(fire_game), .tick(tick),
+        .hit(bullet_hit_ack),
         .player_x(player_x), .player_y(player_y),
         .active(b_act_raw),
         .bullet_x(b_x_raw), .bullet_y(b_y_raw)

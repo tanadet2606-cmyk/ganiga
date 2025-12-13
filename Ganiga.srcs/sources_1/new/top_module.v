@@ -19,7 +19,6 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
 module top_module(
     input CLK100MHZ,
     input BTNL,
@@ -37,6 +36,12 @@ module top_module(
     // System Signals
     wire rst_ni = ~BTNC;
     wire tick;
+
+    // Easy enemy speed tuning
+    localparam integer ENEMY_MOVE_DELAY = 30; // bigger = slower
+    localparam integer ENEMY_STEP_X     = 1;  // pixels per move
+    localparam integer ENEMY_STEP_Y     = 10; // drop when hitting edge
+
     wire [9:0] x, y;
     wire blank;
 
@@ -66,7 +71,11 @@ module top_module(
     );
 
     // 2. Game Engine (Logic Center)
-    game_engine engine (
+    game_engine #(
+        .ENEMY_MOVE_DELAY(ENEMY_MOVE_DELAY),
+        .ENEMY_STEP_X(ENEMY_STEP_X),
+        .ENEMY_STEP_Y(ENEMY_STEP_Y)
+    ) engine (
         .clk(CLK100MHZ), 
         .rst_ni(rst_ni), 
         .tick(tick),
