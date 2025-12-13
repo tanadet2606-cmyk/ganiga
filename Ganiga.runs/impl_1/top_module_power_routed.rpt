@@ -1,7 +1,7 @@
 Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2015.4 (win64) Build 1412921 Wed Nov 18 09:43:45 MST 2015
-| Date             : Sat Dec 13 12:26:41 2025
+| Date             : Sat Dec 13 13:32:19 2025
 | Host             : Kawiii running 64-bit major release  (build 9200)
 | Command          : 
 | Design           : top_module
@@ -30,12 +30,12 @@ Table of Contents
 ----------
 
 +--------------------------+-------+
-| Total On-Chip Power (W)  | 6.701 |
-| Dynamic (W)              | 6.620 |
+| Total On-Chip Power (W)  | 6.765 |
+| Dynamic (W)              | 6.684 |
 | Device Static (W)        | 0.081 |
 | Effective TJA (C/W)      | 5.0   |
-| Max Ambient (C)          | 66.5  |
-| Junction Temperature (C) | 58.5  |
+| Max Ambient (C)          | 66.2  |
+| Junction Temperature (C) | 58.8  |
 | Confidence Level         | Low   |
 | Setting File             | ---   |
 | Simulation Activity File | ---   |
@@ -49,17 +49,17 @@ Table of Contents
 +----------------+-----------+----------+-----------+-----------------+
 | On-Chip        | Power (W) | Used     | Available | Utilization (%) |
 +----------------+-----------+----------+-----------+-----------------+
-| Slice Logic    |     1.495 |      924 |       --- |             --- |
-|   LUT as Logic |     1.319 |      505 |     20800 |            2.43 |
-|   CARRY4       |     0.142 |      105 |      8150 |            1.29 |
-|   Register     |     0.028 |      138 |     41600 |            0.33 |
+| Slice Logic    |     2.309 |     1058 |       --- |             --- |
+|   LUT as Logic |     2.131 |      610 |     20800 |            2.93 |
+|   CARRY4       |     0.144 |      107 |      8150 |            1.31 |
+|   Register     |     0.028 |      145 |     41600 |            0.35 |
 |   BUFG         |     0.005 |        1 |        32 |            3.13 |
-|   Others       |     0.000 |       14 |       --- |             --- |
-| Signals        |     1.119 |      453 |       --- |             --- |
+|   Others       |     0.000 |       17 |       --- |             --- |
+| Signals        |     1.777 |      579 |       --- |             --- |
 | Block RAM      |    <0.001 |      0.5 |        50 |            1.00 |
-| I/O            |     4.005 |       22 |       106 |           20.75 |
+| I/O            |     2.597 |       22 |       106 |           20.75 |
 | Static Power   |     0.081 |          |           |                 |
-| Total          |     6.701 |          |           |                 |
+| Total          |     6.765 |          |           |                 |
 +----------------+-----------+----------+-----------+-----------------+
 
 
@@ -69,9 +69,9 @@ Table of Contents
 +-----------+-------------+-----------+-------------+------------+
 | Source    | Voltage (V) | Total (A) | Dynamic (A) | Static (A) |
 +-----------+-------------+-----------+-------------+------------+
-| Vccint    |       0.950 |     2.801 |       2.780 |      0.022 |
-| Vccaux    |       1.800 |     0.159 |       0.146 |      0.014 |
-| Vcco33    |       3.300 |     1.127 |       1.126 |      0.001 |
+| Vccint    |       0.950 |     4.351 |       4.329 |      0.022 |
+| Vccaux    |       1.800 |     0.108 |       0.094 |      0.014 |
+| Vcco33    |       3.300 |     0.729 |       0.728 |      0.001 |
 | Vcco25    |       2.500 |     0.000 |       0.000 |      0.000 |
 | Vcco18    |       1.800 |     0.000 |       0.000 |      0.000 |
 | Vcco15    |       1.500 |     0.000 |       0.000 |      0.000 |
@@ -136,16 +136,17 @@ Table of Contents
 +------------------+-----------+
 | Name             | Power (W) |
 +------------------+-----------+
-| top_module       |     6.620 |
-|   engine         |     0.897 |
-|     bullet_inst  |     0.148 |
-|     e_ctrl       |     0.547 |
-|     p_ctrl       |     0.149 |
-|   game_tick_i    |     0.268 |
-|   ren            |     0.066 |
-|     spr_player   |     0.066 |
-|       player_rom |     0.039 |
-|   vga_driver     |     1.356 |
+| top_module       |     6.684 |
+|   engine         |     0.944 |
+|     bullet_inst  |     0.171 |
+|     e_ctrl       |     0.580 |
+|     p_ctrl       |     0.142 |
+|     u_menu       |     0.003 |
+|   game_tick_i    |     0.252 |
+|   ren            |     0.029 |
+|     spr_player   |     0.023 |
+|       player_rom |     0.002 |
+|   vga_driver     |     2.832 |
 +------------------+-----------+
 
 
