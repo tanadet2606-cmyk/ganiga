@@ -26,6 +26,8 @@ module renderer(
     input  wire [9:0] x,
     input  wire [9:0] y,
 
+    input  wire       game_playing,
+
     input  wire [9:0] player_x,
     input  wire [9:0] player_y,
     input  wire       bullet_active,
@@ -64,10 +66,58 @@ module renderer(
                      (x >= bullet_x) && (x < bullet_x + BULLET_W) &&
                      (y >= bullet_y) && (y < bullet_y + BULLET_H);
 
-    // 4. Compositing
+    // ----------------------------
+    // MENU overlay (simple shapes)
+    // ----------------------------
+    // Star field (cheap pseudo-random dots)
+    wire star_px = (x[4:0] == 5'd0) && (y[3:0] == 4'd0) && (x[9:7] ^ y[9:7] != 3'b000);
+
+    // Title banner near top
+    wire title_banner = (y >= 10'd70) && (y < 10'd120) && (x >= 10'd110) && (x < 10'd530);
+    wire title_border = title_banner && ((y < 10'd74) || (y >= 10'd116) || (x < 10'd114) || (x >= 10'd526));
+    wire title_fill   = title_banner && !title_border;
+
+    // Prompt box
+    wire prompt_box   = (y >= 10'd240) && (y < 10'd290) && (x >= 10'd180) && (x < 10'd460);
+    wire prompt_border= prompt_box && ((y < 10'd244) || (y >= 10'd286) || (x < 10'd184) || (x >= 10'd456));
+    // "PRESS FIRE" as 3 horizontal bars (no font ROM)
+    wire prompt_text  = prompt_box &&
+                        ( (y >= 10'd255 && y < 10'd258) ||
+                          (y >= 10'd265 && y < 10'd268) ||
+                          (y >= 10'd275 && y < 10'd278) ) &&
+                        (x >= 10'd210) && (x < 10'd430);
+
+    // ----------------------------
+    // Compositing
+    // ----------------------------
     always @(*) begin
         if (blank) begin
             r = 0; g = 0; b = 0;
+        end
+        else if (!game_playing) begin
+            // MENU screen
+            if (title_border) begin
+                r = 4'hF; g = 4'h0; b = 4'hF;
+            end
+            else if (title_fill) begin
+                r = 4'h2; g = 4'h0; b = 4'h3;
+            end
+            else if (prompt_border) begin
+                r = 4'h0; g = 4'hF; b = 4'hF;
+            end
+            else if (prompt_text) begin
+                r = 4'hF; g = 4'hF; b = 4'hF;
+            end
+            else if (px_player) begin
+                // Show the ship as decoration on the menu
+                r = p_r; g = p_g; b = p_b;
+            end
+            else if (star_px) begin
+                r = 4'hF; g = 4'hF; b = 4'hF;
+            end
+            else begin
+                r = 0; g = 0; b = 4'h1;
+            end
         end
         else if (px_player) begin
             r = p_r; g = p_g; b = p_b;

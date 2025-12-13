@@ -46,6 +46,7 @@ module top_module(
     wire [9:0] b_x, b_y;
     wire [4:0] en_alive;
     wire [9:0] en_grp_x, en_grp_y;
+    wire       game_playing;
 
     // 1. Clock & Sync
     // ??????? parameter: game_tick.v ??? CLK_HZ, TICK_HZ -> ???????????????
@@ -72,6 +73,7 @@ module top_module(
         .btn_left(BTNL), 
         .btn_right(BTNR), 
         .btn_fire(BTNU),
+        .game_playing(game_playing),
         // Outputs
         .player_x(p_x), 
         .player_y(p_y),
@@ -88,6 +90,7 @@ module top_module(
         .clk(CLK100MHZ), 
         .blank(blank), 
         .x(x), .y(y),
+        .game_playing(game_playing),
         // Data to draw
         .player_x(p_x), 
         .player_y(p_y),
