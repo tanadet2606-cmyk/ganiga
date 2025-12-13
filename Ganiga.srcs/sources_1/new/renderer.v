@@ -42,6 +42,18 @@ module renderer(
     // Player
     wire px_player;
     wire [3:0] p_r, p_g, p_b;
+    wire [3:0] map_r, map_g, map_b;
+    wire       map_is_wall;
+
+    tile_map map_inst (
+        .x(x),
+        .y(y),
+        .r(map_r),
+        .g(map_g),
+        .b(map_b),
+        .is_wall(map_is_wall)
+    );
+    
     player_sprite spr_player(
         .clk(clk), .x(x), .y(y),
         .player_x(player_x), .player_y(player_y),
