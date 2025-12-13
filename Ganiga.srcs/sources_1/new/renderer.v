@@ -46,6 +46,17 @@ module renderer(
     // ---------- Player Sprite ??? ROM ----------
     wire player_px_on;
     wire [3:0] spr_r, spr_g, spr_b;
+    wire [3:0] map_r, map_g, map_b;
+    wire       map_is_wall;
+    
+    tile_map map_inst (
+            .x(x),
+            .y(y),
+            .r(map_r),
+            .g(map_g),
+            .b(map_b),
+            .is_wall(map_is_wall)
+        );
 
     player_sprite #(
         .SPRITE_W(16),
@@ -96,6 +107,11 @@ module renderer(
                 end
             end
 
+// ????? Logic ???????? (??? XOR ???????????????????)
+    // ????????????????? bit ???????????????????
+    wire is_star = ((x[3:0] ^ y[4:1]) == 4'b1001) &&   // Pattern ????
+                   ((x[9:5] ^ y[8:5]) == 5'b01101);    // Pattern ?????????????????????
+
     // ---------- Render Priority ----------
     always @(*) begin
         if (blank) begin
@@ -114,7 +130,9 @@ module renderer(
             r = 4'hF; g = 4'hF; b = 4'h0; // Enemy 
         end
         else begin
-            r = 0; g = 0; b = 4'h1; // Background ????????????
+                r = map_r;
+                g = map_g; 
+                b = map_b;
         end
     end
 

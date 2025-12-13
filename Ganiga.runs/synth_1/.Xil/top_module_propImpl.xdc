@@ -1,4 +1,4 @@
-set_property SRC_FILE_INFO {cfile:D:/Y2_ALL/CPE_digital/lab10/Ganiga/ganiga.srcs/constrs_1/new/Ganiga_constraints.xdc rfile:../../../../lab10/Ganiga/ganiga.srcs/constrs_1/new/Ganiga_constraints.xdc id:1} [current_design]
+set_property SRC_FILE_INFO {cfile:{C:/Users/Songwit Rueangsawat/Desktop/CODE/Git/ganiga/Ganiga.srcs/constrs_1/new/Ganiga_constraints.xdc} rfile:../../../Ganiga.srcs/constrs_1/new/Ganiga_constraints.xdc id:1} [current_design]
 set_property src_info {type:XDC file:1 line:13 export:INPUT save:INPUT read:READ} [current_design]
 set_property PACKAGE_PIN N18 [get_ports {BLUE[0]}]
 set_property src_info {type:XDC file:1 line:14 export:INPUT save:INPUT read:READ} [current_design]
