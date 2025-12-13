@@ -37,6 +37,7 @@ module top_module(
     // System Signals
     wire rst_ni = ~BTNC;
     wire tick;
+    wire game_playing;
     wire [9:0] x, y;
     wire blank;
 
@@ -46,7 +47,6 @@ module top_module(
     wire [9:0] b_x, b_y;
     wire [4:0] en_alive;
     wire [9:0] en_grp_x, en_grp_y;
-    wire       game_playing;
 
     // 1. Clock & Sync
     // ??????? parameter: game_tick.v ??? CLK_HZ, TICK_HZ -> ???????????????
@@ -63,6 +63,7 @@ module top_module(
         .clk(CLK100MHZ), 
         .HS(HS), .VS(VS), 
         .x(x), .y(y), .blank(blank)
+        .game_playing(game_playing),
     );
 
     // 2. Game Engine (Logic Center)
@@ -73,7 +74,6 @@ module top_module(
         .btn_left(BTNL), 
         .btn_right(BTNR), 
         .btn_fire(BTNU),
-        .game_playing(game_playing),
         // Outputs
         .player_x(p_x), 
         .player_y(p_y),
@@ -83,6 +83,7 @@ module top_module(
         .enemies_alive(en_alive), 
         .enemy_group_x(en_grp_x), 
         .enemy_group_y(en_grp_y)
+        .game_playing(game_playing)
     );
 
     // 3. Renderer (Visual Center)
@@ -90,7 +91,6 @@ module top_module(
         .clk(CLK100MHZ), 
         .blank(blank), 
         .x(x), .y(y),
-        .game_playing(game_playing),
         // Data to draw
         .player_x(p_x), 
         .player_y(p_y),
