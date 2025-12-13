@@ -19,113 +19,127 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
+
 module top_module(
-    input CLK100MHZ,
-    input BTNL,
-    input BTNR,
-    input BTNC,
-    input BTNU,
-    input sw0, input sw1, input sw2,
-    output HS,
-    output VS,
-    output [3:0] RED,
-    output [3:0] GREEN,
-    output [3:0] BLUE
+    input  wire        CLK100MHZ,
+    input  wire        BTNL,
+    input  wire        BTNR,
+    input  wire        BTNC,
+    input  wire        BTNU,
+    input  wire        sw0, input wire sw1, input wire sw2,
+    output wire        HS,
+    output wire        VS,
+    output wire [3:0]  RED,
+    output wire [3:0]  GREEN,
+    output wire [3:0]  BLUE
 );
 
-    // Active-low reset from BTNC
+    // System Signals
     wire rst_ni = ~BTNC;
-
-    // 60 Hz tick
     wire tick;
-    game_tick u_tick(
-        .clk(CLK100MHZ),
-        .rst_ni(rst_ni),
-        .tick(tick)
-    );
-
-    // VGA sync
     wire [9:0] x, y;
     wire blank;
-    vga_sync u_vga(
-        .clk(CLK100MHZ),
-        .rst_ni(rst_ni),
-        .hsync(HS),
-        .vsync(VS),
-        .blank(blank),
-        .x(x),
-        .y(y)
-    );
 
-    // Game signals
+    // Game Signals (Engine -> Renderer)
     wire [9:0] p_x, p_y;
-    wire b_active;
+    wire       b_active;
     wire [9:0] b_x, b_y;
     wire [4:0] en_alive;
     wire [9:0] en_grp_x, en_grp_y;
 
-    wire game_playing;
-    wire game_over;
-    wire [3:0] score_h, score_t, score_o;
+    // Menu / State signals
+    wire game_playing;     // 1 = in game, 0 = menu/over screens
+    wire game_over;        // 1 = game over screen
 
-    // Easy enemy speed knobs (edit here)
-    localparam integer ENEMY_MOVE_DELAY  = 30; // bigger = slower
-    localparam integer ENEMY_STEP_X      = 1;
-    localparam integer ENEMY_STEP_Y      = 10;
-    localparam integer ENEMY_GAME_OVER_Y = 440;
+    // Score (BCD digits: hundreds, tens, ones)
+    wire [3:0] score_h;
+    wire [3:0] score_t;
+    wire [3:0] score_o;
 
-    // Game engine
-    game_engine #(
-        .ENEMY_MOVE_DELAY (ENEMY_MOVE_DELAY),
-        .ENEMY_STEP_X     (ENEMY_STEP_X),
-        .ENEMY_STEP_Y     (ENEMY_STEP_Y),
-        .ENEMY_GAME_OVER_Y(ENEMY_GAME_OVER_Y)
-    ) engine (
-        .clk(CLK100MHZ),
+    // 1) Tick generator (60Hz)
+    game_tick #(
+        .CLK_HZ (100_000_000),
+        .TICK_HZ(60)
+    ) game_tick_i (
+        .clk_i (CLK100MHZ),
         .rst_ni(rst_ni),
-        .tick(tick),
-        .btn_left(BTNL),
-        .btn_right(BTNR),
-        .btn_fire(BTNU),
-
-        .player_x(p_x),
-        .player_y(p_y),
-        .bullet_active(b_active),
-        .bullet_x(b_x),
-        .bullet_y(b_y),
-        .enemies_alive(en_alive),
-        .enemy_group_x(en_grp_x),
-        .enemy_group_y(en_grp_y),
-
-        .game_playing(game_playing),
-        .game_over(game_over),
-        .score_h(score_h),
-        .score_t(score_t),
-        .score_o(score_o)
+        .tick_o(tick)
     );
 
-    // Renderer
-    renderer ren (
-        .clk(CLK100MHZ),
-        .blank(blank),
-        .x(x), .y(y),
+    // 2) VGA sync
+    vga_sync vga_driver (
+        .clk  (CLK100MHZ),
+        .HS   (HS),
+        .VS   (VS),
+        .x    (x),
+        .y    (y),
+        .blank(blank)
+    );
 
-        .player_x(p_x),
-        .player_y(p_y),
+    // 3) Game Engine
+    // NOTE: ไม่มี #(parameter) เพื่อกัน "parameter mismatch"
+    // ถ้าคุณอยากปรับความเร็ว enemy ให้ไปแก้ที่ localparam/parameter ใน enemy_control/game_engine ได้ตรง ๆ
+    game_engine engine (
+        .clk       (CLK100MHZ),
+        .rst_ni     (rst_ni),
+        .tick       (tick),
+
+        .btn_left   (BTNL),
+        .btn_right  (BTNR),
+        .btn_fire   (BTNU),
+
+        // state outputs
+        .game_playing(game_playing),
+        .game_over  (game_over),
+
+        // score outputs
+        .score_h    (score_h),
+        .score_t    (score_t),
+        .score_o    (score_o),
+
+        // outputs to render
+        .player_x   (p_x),
+        .player_y   (p_y),
+
         .bullet_active(b_active),
-        .bullet_x(b_x),
-        .bullet_y(b_y),
+        .bullet_x   (b_x),
+        .bullet_y   (b_y),
+
+        .enemies_alive(en_alive),
+        .enemy_group_x(en_grp_x),
+        .enemy_group_y(en_grp_y)
+    );
+
+    // 4) Renderer
+    renderer ren (
+        .clk        (CLK100MHZ),
+        .blank      (blank),
+        .x          (x),
+        .y          (y),
+
+        .game_playing(game_playing),
+        .game_over  (game_over),
+
+        .score_h    (score_h),
+        .score_t    (score_t),
+        .score_o    (score_o),
+
+        // Data to draw
+        .player_x   (p_x),
+        .player_y   (p_y),
+
+        .bullet_active(b_active),
+        .bullet_x   (b_x),
+        .bullet_y   (b_y),
+
         .enemies_alive(en_alive),
         .enemy_group_x(en_grp_x),
         .enemy_group_y(en_grp_y),
 
-        .game_playing(game_playing),
-        .game_over(game_over),
-        .score_h(score_h),
-        .score_t(score_t),
-        .score_o(score_o),
-
-        .r(RED), .g(GREEN), .b(BLUE)
+        // Color output
+        .r          (RED),
+        .g          (GREEN),
+        .b          (BLUE)
     );
 
 endmodule
